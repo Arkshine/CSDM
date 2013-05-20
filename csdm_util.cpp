@@ -124,31 +124,6 @@ bool InitUtilCode()
 	RestartRoundHook = Hooker->CreateHook( g_round_patch.orig_addr, ( void* )RestartRound, TRUE );
 	RestartRoundOrig = reinterpret_cast< FuncRestartRound >( RestartRoundHook->GetOriginal() );
 #else
-#if defined AMD64
-	unsigned char patch[12] = 
-		{ '\x48', '\xB8',				//MOV RAX, 
-		  '\0','\0','\0','\0','\0','\0','\0','\0',	// <op>
-		  '\xFF', '\xE0'};				//JMP RAX
-	const int newfunc_size = 32;
-	unsigned char new_func[newfunc_size] = 
-				{ '\x55',		//PUSH RBP
-				  '\x53',		//PUSH RBX
-				  '\x41', '\x54',	//PUSH R12
-				  '\x41', '\x55',	//PUSH R13
-				  '\x41', '\x56',	//PUSH R14
-				  '\x41', '\x57',	//PUSH R15
-				  '\x48', '\xB8',	//MOV RAX, 
-				  '\0','\0','\0','\0','\0','\0','\0','\0',	// <op>
-				  '\xFF', '\xD0',	//CALL RAX
-				  '\x41', '\x5f',	//POP R15
-				  '\x41', '\x5e',	//POP R14
-				  '\x41', '\x5d',	//POP R13
-				  '\x41', '\x5c',	//POP R12
-				  '\x5B',		//POP RBX
-				  '\x5D'		//POP RBP
-				};
-	const int callgate_patch = 12;
-#else
 	unsigned char patch[6] = { '\xFF', '\x25', 0, 0, 0, 0 }; //JMP *(0x0)
 	const int newfunc_size = 7;
 	unsigned char new_func[newfunc_size] = 
@@ -181,21 +156,13 @@ bool InitUtilCode()
 	//eip is faddr + 4
 	//target function is RestartRound
 	//:., we want:
-#if defined AMD64
-	*(unsigned long *)faddr = (unsigned long)RestartRound;
-#else
 	*(unsigned long *)faddr = (unsigned long)RestartRound - (unsigned long)(faddr + 4);
-#endif
 	//gate is assembled, now patch it in
 	faddr = patch;
 	faddr += 2;
-#if defined AMD64
-	*(unsigned char **)faddr = g_round_patch.new_func;
-#else
+
 	*(unsigned char **)faddr = (unsigned char *)&g_round_patch.new_func;
-#endif
 	memcpy(src_addr, patch, sizeof(patch));
-#endif
 
 	_p_ldr ffa[] = CSP_TD_PATCHES;
 	InitPatchControl(ffa, &g_takedmg_patches, CSP_TD_PATCH_COUNT);

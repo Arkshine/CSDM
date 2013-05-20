@@ -84,11 +84,8 @@ bool CSigMngr::ResolveAddress(signature_t *sigmem)
 	while (!feof(fp))
 	{
 		fgets(buffer, sizeof(buffer)-1, fp);
-#if defined AMD64
-		sscanf(buffer, "%Lx-%Lx", &start, &end);
-#else
+
 		sscanf(buffer, "%lx-%lx", &start, &end);
-#endif
 
 		if (start == sigmem->allocBase)
 		{

@@ -34,15 +34,8 @@ void SetPlayerModel(edict_t *pEdict, int model_id);
 	#define EXTRAOFFSET_WEAPONS			0
 #endif // defined __linux__
 
-#if !defined __amd64__
-	// 32 bit offsets here
-	#define OFFSET_TEAM					114 + EXTRAOFFSET
-	#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET
-#else
-	// Amd64 offsets here
-	#define OFFSET_TEAM					139 + EXTRAOFFSET // +25
-	#define OFFSET_INTERNALMODEL		152 + EXTRAOFFSET // +26
-#endif
+#define OFFSET_TEAM					114 + EXTRAOFFSET
+#define OFFSET_INTERNALMODEL		126 + EXTRAOFFSET
 
 #define	TEAM_T		1
 #define	TEAM_CT		2
