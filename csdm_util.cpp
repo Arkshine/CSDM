@@ -11,17 +11,17 @@
 #define	PAGE_SIZE	4096
 #define ALIGN(ar) ((long)ar & ~(PAGE_SIZE-1))
 
+#include "chooker.h"
+
+CHooker		HookerClass;
+CHooker*	Hooker = &HookerClass;
+
+CFunc*				RestartRoundHook = NULL;
+FuncRestartRound	RestartRoundOrig = NULL;
+
 #ifdef __linux__
 	#include <sys/mman.h>
 	#define	PAGE_EXECUTE_READWRITE	PROT_READ|PROT_WRITE|PROT_EXEC
-
-	#include "chooker.h"
-
-	CHooker		HookerClass;
-	CHooker*	Hooker = &HookerClass;
-
-	CFunc*				RestartRoundHook = NULL;
-	FuncRestartRound	RestartRoundOrig = NULL;
 #endif
 
 void *g_respawn_func = NULL;

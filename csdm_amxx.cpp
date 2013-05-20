@@ -103,27 +103,25 @@ void OnPluginsUnloaded()
 	g_SpawnMethod = -1;
 }
 
-#ifdef __linux__
-void RestartRound( void* pGameRules )
+#if defined( WIN32 )
+	void __fastcall RestartRound( void* pGameRules )
 #else
-void RestartRound()
+	void RestartRound( void* pGameRules )
 #endif
-{
-#ifdef __linux__
-	if( RestartRoundHook->Restore() )
 	{
-		RestartRoundOrig( pGameRules );
-		RestartRoundHook->Patch();
+		if( RestartRoundHook->Restore() )
+		{
+			RestartRoundOrig( pGameRules );
+			RestartRoundHook->Patch();
+		}
+
+		if (!IsActive())
+			return;
+
+		RestartRoundTask *pTask = new RestartRoundTask();
+
+		g_Timer.AddTask(pTask, 0.1);
 	}
-#endif
-
-	if (!IsActive())
-		return;
-
-	RestartRoundTask *pTask = new RestartRoundTask();
-
-	g_Timer.AddTask(pTask, 0.1);
-}
 
 extern "C" void __cxa_pure_virtual(void)
 {
