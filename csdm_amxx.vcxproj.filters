@@ -13,8 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
     </Filter>
-    <Filter Include="SDK">
+    <Filter Include="Module SDK">
       <UniqueIdentifier>{90051aaa-4e2b-47f6-89e2-44c56e14a602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module SDK\SDK Base">
+      <UniqueIdentifier>{d1ea188c-07dd-4e34-9805-373e08920b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module SDK\AMXX STL">
+      <UniqueIdentifier>{8f0538bd-a3fa-49b4-934b-f8c852258812}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +58,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="amxxmodule.cpp">
-      <Filter>SDK</Filter>
+      <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,26 +92,26 @@
     <ClInclude Include="CSigMngr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="amxxmodule.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="CString.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="CVector.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
     <ClInclude Include="moduleconfig.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="sh_list.h">
-      <Filter>SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="sh_stack.h">
-      <Filter>SDK</Filter>
+      <Filter>Module SDK</Filter>
     </ClInclude>
     <ClInclude Include="chooker.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CString.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="CVector.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="sh_list.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="sh_stack.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="amxxmodule.h">
+      <Filter>Module SDK\SDK Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
