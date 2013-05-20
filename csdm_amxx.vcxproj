@@ -112,6 +112,7 @@
     <ClCompile Include="amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="chooker.h" />
     <ClInclude Include="cs_offsets.h" />
     <ClInclude Include="csdm_amxx.h" />
     <ClInclude Include="csdm_config.h" />

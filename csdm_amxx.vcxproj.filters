@@ -104,6 +104,9 @@
     <ClInclude Include="sh_stack.h">
       <Filter>SDK</Filter>
     </ClInclude>
+    <ClInclude Include="chooker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="version.rc">
