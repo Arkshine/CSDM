@@ -2240,7 +2240,7 @@ static META_FUNCTIONS g_MetaFunctions_Table =
 	GetEngineFunctions_Post
 };
 
-C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs)
+C_DLLEXPORT int Meta_Query(const char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs)
 {
 	if ((int) CVAR_GET_FLOAT("developer") != 0)
 		UTIL_LogPrintf("[%s] dev: called: Meta_Query; version=%s, ours=%s\n", 
@@ -2284,7 +2284,7 @@ C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_
 	}
 
 #ifdef FN_META_QUERY
-	return FN_META_QUERY();
+	FN_META_QUERY();
 #endif	// FN_META_QUERY
 
 	return 1;
@@ -2328,14 +2328,13 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 
 #ifdef FN_META_DETACH
 	FN_META_DETACH();
-	return TRUE;
 #endif	// FN_META_DETACH
 	return TRUE;
 }
 
 
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 // linux prototype
 C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
 
@@ -2375,7 +2374,7 @@ C_DLLEXPORT void __stdcall GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, 
 	gpGlobals = pGlobals;
 	// NOTE!  Have to call logging function _after_ copying into g_engfuncs, so
 	// that g_engfuncs.pfnAlertMessage() can be resolved properly, heh. :)
-	UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
+	// UTIL_LogPrintf("[%s] dev: called: GiveFnptrsToDll\n", Plugin_info.logtag);
 	// --> ** Function core
 
 #ifdef _MSC_VER
@@ -2549,6 +2548,14 @@ C_DLLEXPORT int AMXX_Query(int *interfaceVersion, amxx_module_info_s *moduleInfo
 // request optional function
 #define REQFUNC_OPT(name, fptr, type) fptr = (type)reqFnptrFunc(name)
 
+C_DLLEXPORT int AMXX_CheckGame(const char *game)
+{
+#ifdef FN_AMXX_CHECKGAME
+	return FN_AMXX_CHECKGAME(game);
+#else
+	return AMXX_GAME_OK;
+#endif
+}
 C_DLLEXPORT int AMXX_Attach(PFN_REQ_FNPTR reqFnptrFunc)
 {
 	// Check pointer
@@ -3026,7 +3033,7 @@ void operator delete[](void * ptr) {
 
 #include "osdep.h"			// win32 vsnprintf, etc
 
-char* UTIL_VarArgs( char *format, ... )
+char* UTIL_VarArgs( const char *format, ... )
 {
 	va_list		argptr;
 	static char		string[1024];
@@ -3043,7 +3050,7 @@ char* UTIL_VarArgs( char *format, ... )
 // UTIL_LogPrintf - Prints a logged message to console.
 // Preceded by LOG: ( timestamp ) < message >
 //=========================================================
-void UTIL_LogPrintf( char *fmt, ... )
+void UTIL_LogPrintf( const char *fmt, ... )
 {
 	va_list			argptr;
 	static char		string[1024];

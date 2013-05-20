@@ -12,8 +12,16 @@
 #define ALIGN(ar) ((long)ar & ~(PAGE_SIZE-1))
 
 #ifdef __linux__
-#include <sys/mman.h>
-#define	PAGE_EXECUTE_READWRITE	PROT_READ|PROT_WRITE|PROT_EXEC
+	#include <sys/mman.h>
+	#define	PAGE_EXECUTE_READWRITE	PROT_READ|PROT_WRITE|PROT_EXEC
+
+	#include "chooker.h"
+
+	CHooker		HookerClass;
+	CHooker*	Hooker = &HookerClass;
+
+	CFunc*				RestartRoundHook = NULL;
+	FuncRestartRound	RestartRoundOrig = NULL;
 #endif
 
 void *g_respawn_func = NULL;
@@ -112,6 +120,10 @@ bool InitUtilCode()
 	RESOLVE_SIG(g_takedmg_patches.base, unsigned char *, CSPLAYER_TAKEDAMAGE);
 	RESOLVE_SIG(g_pkilled_patches.base, unsigned char *, CSGAME_PLAYERKILLED);
 
+#ifdef __linux__
+	RestartRoundHook = Hooker->CreateHook( g_round_patch.orig_addr, ( void* )RestartRound, TRUE );
+	RestartRoundOrig = reinterpret_cast< FuncRestartRound >( RestartRoundHook->GetOriginal() );
+#else
 #if defined AMD64
 	unsigned char patch[12] = 
 		{ '\x48', '\xB8',				//MOV RAX, 
@@ -140,10 +152,11 @@ bool InitUtilCode()
 	unsigned char patch[6] = { '\xFF', '\x25', 0, 0, 0, 0 }; //JMP *(0x0)
 	const int newfunc_size = 7;
 	unsigned char new_func[newfunc_size] = 
-				{  '\x60',		//PUSHAD
-				   '\xE8', 0, 0, 0, 0,	//CALL
-				   '\x61'		//POPAD
-				};
+	{  
+		'\x60',				//PUSHAD
+		'\xE8', 0, 0, 0, 0,	//CALL
+		'\x61'				//POPAD
+	};
 	const int callgate_patch = 2;
 #endif
 	//allocate new func
@@ -182,6 +195,7 @@ bool InitUtilCode()
 	*(unsigned char **)faddr = (unsigned char *)&g_round_patch.new_func;
 #endif
 	memcpy(src_addr, patch, sizeof(patch));
+#endif
 
 	_p_ldr ffa[] = CSP_TD_PATCHES;
 	InitPatchControl(ffa, &g_takedmg_patches, CSP_TD_PATCH_COUNT);
@@ -404,7 +418,7 @@ edict_t *GetEdict(int index)
 	return NULL;
 }
 
-void print_srvconsole(char *fmt, ...)
+void print_srvconsole( const char *fmt, ...)
 {
 	va_list argptr;
 	static char string[384];

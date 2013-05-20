@@ -6,6 +6,7 @@
 #include "csdm_timer.h"
 #include "csdm_tasks.h"
 
+
 int g_PreDeath = -1;
 int g_PostDeath = -1;
 int g_PreSpawn = -1;
@@ -102,8 +103,20 @@ void OnPluginsUnloaded()
 	g_SpawnMethod = -1;
 }
 
+#ifdef __linux__
+void RestartRound( void* pGameRules )
+#else
 void RestartRound()
+#endif
 {
+#ifdef __linux__
+	if( RestartRoundHook->Restore() )
+	{
+		RestartRoundOrig( pGameRules );
+		RestartRoundHook->Patch();
+	}
+#endif
+
 	if (!IsActive())
 		return;
 
