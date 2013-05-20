@@ -29,7 +29,11 @@ extern AMX_NATIVE_INFO g_CsdmNatives[];
 void DeathHandler(int pk, int pv, int hs, const char *wp, bool post);
 void SpawnHandler(int pk, bool fake);
 void SetActive(bool active);
+#ifdef __linux__
+void RestartRound( void* pGameRules );
+#else
 void RestartRound();
+#endif
 void ResetHUD(edict_t *pEdict);
 
 inline bool IsActive()

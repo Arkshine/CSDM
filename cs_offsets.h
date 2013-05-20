@@ -19,36 +19,39 @@
 #if defined WIN32
 
 //find mp_tkpunish + kill
-#define CSPLAYER_ROUNDRESPAWN			"\x83\xEC\x0C\x53\x56\x8B\xF1\x33\xDB\x57\x8A\x86\x60\x03\x00\x00\xC6\x86\x7D\x09\x00\x00\x01\x3C\x01\x75\x40\x68\x2A\x2A\x2A\x2A"
-#define CSPLAYER_ROUNDRESPAWN_BYTES		32
+#define CSPLAYER_ROUNDRESPAWN		"\x83\x2A\x2A\x53\x56\x8B\x2A\x33\x2A\x57\x8A"
+#define CSPLAYER_ROUNDRESPAWN_BYTES	11
 
 //find mp_autoteambalance
 //subtract the return from the start
-#define CSPLAYER_RESTARTROUND			"\x51\x53\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\xFF\x50\x1C\x8B\x0D\x2A\x2A\x2A\x2A\x33\xDB\x3B\xCB\x74\x05\xE8\x2A\x2A\x2A"
-#define CSPLAYER_RESTARTROUND_BYTES		32
+#define CSPLAYER_RESTARTROUND		"\x51\x53\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B"
+#define CSPLAYER_RESTARTROUND_BYTES	12
 //there are 0x9DE bytes in this function.
 //the last ones are a mov, 3 pops, and a retn
 //that gives us, from the end...
-#define CSPLAYER_RESTARTROUND_END		0x9DE
+#define CSPLAYER_RESTARTROUND_END			0x9DE
 #define CSPLAYER_RESTARTROUND_PATCH_BYTES	10
 
-#define CSPLAYER_TAKEDAMAGE				"\x83\xEC\x40\x53\x8B\x5C\x24\x54\x55\x33\xED\x56\x57\xF7\xC3\x60\x00\x00\x01\x8B\xF1\xC7\x44\x24\x28\x00\x00\x00\x00\x89\x6C\x24"
-#define CSPLAYER_TAKEDAMAGE_BYTES	16
+#define CSPLAYER_TAKEDAMAGE			"\x83\x2A\x2A\x53\x8B\x2A\x2A\x2A\x55\x33\x2A\x56\x57"
+#define CSPLAYER_TAKEDAMAGE_BYTES	13
 /**
- * 08FFED (0x4BD) - first check, jz->2byte nop, purpose unknown
- * 090328 (0x7F8) - second check, jnz->2byte jmp, displays "hint"
- * 09046A (0x93A) - third check, jnz->1byte jmp, displays attack
- * 0904C9 (0x999) - fourth check, jnz->1byte jmp, does dmg deamp
- * 0909CD (0xE9D) - fifth check, jz->2byte nop, purpose unknown*/
-#define CSP_TD_PATCHES					{{"\x90\x90",0x4F3},{"\x90\xE9",0x87B},{"\xEB",0x9BB},{"\xEB",0xA19},{"\x90\x90",0xF43}}
-#define CSP_TD_PATCH_COUNT	5
+ * 09C840 (base)
+ * 09CA04 (0x1C4) - first  check, jnz->1byte jmp, purpose unknown
+ * 09CD14 (0x4D4) - second check, jz->2byte nop, purpose unknown
+ * 09D04F (0x80F) - third  check, jnz->2byte jmp, displays "hint"
+ * 09D191 (0x951) - fourth check, jnz->1byte jmp, displays attack
+ * 09D1F0 (0x9B0) - fifth  check, jnz->1byte jmp, does dmg deamp
+ * 09D6F4 (0xEB4) - sixth  check, jz->2byte nop, purpose unknown*/
+#define CSP_TD_PATCHES				{{"\xEB",0x1C4},{"\x90\x90",0x4D4},{"\x90\xE9",0x80F},{"\xEB",0x951},{"\xEB",0x9B0},{"\x90\x90",0xEB4}}
+#define CSP_TD_PATCH_COUNT			6
 
-#define CSGAME_PLAYERKILLED			"\x51\x53\x8B\x5C\x24\x10\x55\x8B\xE9\x8B\x4C\x24\x18\x56\x8B\x45\x00\x57\x8B\x7C\x24\x18\x51\x53\x57\x8B\xCD\xFF\x50\x74\x8B\x97"
-#define CSGAME_PLAYERKILLED_BYTES	32
+#define CSGAME_PLAYERKILLED			"\x51\x53\x8B\x2A\x2A\x2A\x55\x8B\x2A\x8B"
+#define CSGAME_PLAYERKILLED_BYTES	10
 /**
- * 085B22 - (0x162) - first check, jnz->2byte jump, does kill stuff
+ * 091A70 (base)	
+ * 091BD2 - (0x162) - first check, jnz->2byte jump, does kill stuff
  */
-#define CSG_PK_PATCHES		{{"\x90\xE9",0x167}}
+#define CSG_PK_PATCHES		{{"\x90\xE9",0x162}}
 #define CSG_PK_PATCH_COUNT	1
 
 #else
@@ -102,31 +105,36 @@
 // X86
 ///////
 
-#define CSPLAYER_ROUNDRESPAWN			"RoundRespawn__11CBasePlayer"
+#define CSPLAYER_ROUNDRESPAWN			"_ZN11CBasePlayer12RoundRespawnEv"
 
-#define CSPLAYER_RESTARTROUND			"RestartRound__18CHalfLifeMultiplay"
-//there are 0xB8A bytes in this function.
+#define CSPLAYER_RESTARTROUND			"_ZN18CHalfLifeMultiplay12RestartRoundEv"
+//there are 0x78A bytes in this function.
 //the last ones are all two/one byte instrs
 //that gives us, from the end...
-#define CSPLAYER_RESTARTROUND_END			0xB8E
-#define CSPLAYER_RESTARTROUND_PATCH_BYTES	6
+#define CSPLAYER_RESTARTROUND_END			0x78A
+#define CSPLAYER_RESTARTROUND_PATCH_BYTES	7
 
-#define CSPLAYER_TAKEDAMAGE				"TakeDamage__11CBasePlayerP9entvars_sT1fi"
-/**
- * 0CD576 (0x70A) - first check, jz->2byte nop, purpose unknown
- * 0CD93D (0xAD1) - second check, jnz->2byte jmp, displays hint"
- * 0CDA10 (0xBA4) - third check, jnz->1byte jmp, displays team attack msg
- * 0CDA75 (0xC09) - fourth check, jnz->1byte jmp, does dmg deamp
- * 0CE1D8 (0x136c) - fifth check, jz->2byte nop, purpose unknown
- */
-#define CSP_TD_PATCHES		{{"\x90\x90",0x709},{"\x90\xE9",0xAD6},{"\xEB",0xBAB},{"\xEB",0xC0A},{"\x90\x90",0x1369}}
-#define CSP_TD_PATCH_COUNT	5
+#define CSPLAYER_TAKEDAMAGE				"_ZN11CBasePlayer10TakeDamageEP9entvars_sS1_fi"
 
-#define CSGAME_PLAYERKILLED				"PlayerKilled__18CHalfLifeMultiplayP11CBasePlayerP9entvars_sT2"
 /**
- * 0BF32A (0x182) - first check, jnz->2byte jmp, does kill stuff
+ * 111720 (base)
+ * 111DF6 (0x6D6)  - first check	, jz->5byte nop	, displays hint
+ * 112414 (0xCF4)  - second check	, jnz->2byte jmp, related to career task
+ * 11256E (0xE4E)  - third check	, jnz->2byte jmp, does dmg deamp
+ * 1127B3 (0x1093) - fourth check	, jnz->2byte jmp, related to grenade and mp_friendlyfire
+ * 11284C (0x112C) - fifth check	, jnz->2byte jmp, related to career task
+ * 1124BB (0xD9B)  - sixth check	, jnz->2byte jmp, related to grenade and mp_friendlyfire
+ * 112B94 (0x1474) - seventh check	, jnz->1byte jmp, displays team attack msg
  */
-#define CSG_PK_PATCHES		{{"\x90\xE9",0x182}}
+#define CSP_TD_PATCHES		{{SBN,0x6D6},{"\x90\xE9",0xCF4},{"\x90\xE9",0xE4E},{"\x90\xE9",0x1093},{"\x90\xE9",0x112C},{"\x90\xE9",0xD9B},{"xEB",0x1474}}
+#define CSP_TD_PATCH_COUNT	7
+
+#define CSGAME_PLAYERKILLED	"_ZN18CHalfLifeMultiplay12PlayerKilledEP11CBasePlayerP9entvars_sS3_"
+/**
+ * F2880 (base)
+ * F2A4C (0x1CC) - first check, jnz->5byte nop, does kill stuff
+ */		
+#define CSG_PK_PATCHES		{{"\x90\x90\x90\x90\x90\x90",0x1CC}}
 #define CSG_PK_PATCH_COUNT	1
 
 #endif //AMD64
