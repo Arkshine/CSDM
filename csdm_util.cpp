@@ -120,49 +120,8 @@ bool InitUtilCode()
 	RESOLVE_SIG(g_takedmg_patches.base, unsigned char *, CSPLAYER_TAKEDAMAGE);
 	RESOLVE_SIG(g_pkilled_patches.base, unsigned char *, CSGAME_PLAYERKILLED);
 
-#ifdef __linux__
 	RestartRoundHook = Hooker->CreateHook( g_round_patch.orig_addr, ( void* )RestartRound, TRUE );
 	RestartRoundOrig = reinterpret_cast< FuncRestartRound >( RestartRoundHook->GetOriginal() );
-#else
-	unsigned char patch[6] = { '\xFF', '\x25', 0, 0, 0, 0 }; //JMP *(0x0)
-	const int newfunc_size = 7;
-	unsigned char new_func[newfunc_size] = 
-	{  
-		'\x60',				//PUSHAD
-		'\xE8', 0, 0, 0, 0,	//CALL
-		'\x61'				//POPAD
-	};
-	const int callgate_patch = 2;
-#endif
-	//allocate new func
-	unsigned char *faddr = (unsigned char *)UTIL_CodeAlloc(
-							(newfunc_size + CSPLAYER_RESTARTROUND_PATCH_BYTES));
-	//get src func ptr
-	unsigned char *src_addr = g_round_patch.orig_addr + 
-							(CSPLAYER_RESTARTROUND_END - CSPLAYER_RESTARTROUND_PATCH_BYTES + 1);
-	//protect it
-	UTIL_MemProtect(src_addr, 
-					CSPLAYER_RESTARTROUND_PATCH_BYTES, 
-					PAGE_EXECUTE_READWRITE);
-	//copy in the bytes needed
-	g_round_patch.new_func = faddr;
-	memcpy(faddr, new_func, newfunc_size);
-	faddr += newfunc_size;
-	memcpy(faddr, src_addr, CSPLAYER_RESTARTROUND_PATCH_BYTES);
-	memcpy(g_round_patch.un_patch, src_addr, CSPLAYER_RESTARTROUND_PATCH_BYTES);
-	//assemble the gate
-	faddr = g_round_patch.new_func;
-	faddr += callgate_patch;
-	//eip is faddr + 4
-	//target function is RestartRound
-	//:., we want:
-	*(unsigned long *)faddr = (unsigned long)RestartRound - (unsigned long)(faddr + 4);
-	//gate is assembled, now patch it in
-	faddr = patch;
-	faddr += 2;
-
-	*(unsigned char **)faddr = (unsigned char *)&g_round_patch.new_func;
-	memcpy(src_addr, patch, sizeof(patch));
 
 	_p_ldr ffa[] = CSP_TD_PATCHES;
 	InitPatchControl(ffa, &g_takedmg_patches, CSP_TD_PATCH_COUNT);
