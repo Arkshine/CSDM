@@ -127,6 +127,7 @@
     <ClInclude Include="CString.h" />
     <ClInclude Include="CVector.h" />
     <ClInclude Include="moduleconfig.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="sh_list.h" />
     <ClInclude Include="sh_stack.h" />
   </ItemGroup>
