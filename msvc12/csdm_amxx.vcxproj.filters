@@ -24,95 +24,95 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="csdm_amxx.cpp">
+    <ClCompile Include="..\csdm_amxx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_config.cpp">
+    <ClCompile Include="..\csdm_config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_message.cpp">
+    <ClCompile Include="..\csdm_message.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_mm.cpp">
+    <ClCompile Include="..\csdm_mm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_natives.cpp">
+    <ClCompile Include="..\csdm_natives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_player.cpp">
+    <ClCompile Include="..\csdm_player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_spawning.cpp">
+    <ClCompile Include="..\csdm_spawning.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_tasks.cpp">
+    <ClCompile Include="..\csdm_tasks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_timer.cpp">
+    <ClCompile Include="..\csdm_timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csdm_util.cpp">
+    <ClCompile Include="..\csdm_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="amxxmodule.cpp">
+    <ClCompile Include="..\sdk\amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cs_offsets.h">
+    <ClInclude Include="..\include\chooker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_amxx.h">
+    <ClInclude Include="..\include\cs_offsets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_config.h">
+    <ClInclude Include="..\include\csdm_amxx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_message.h">
+    <ClInclude Include="..\include\csdm_config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_player.h">
+    <ClInclude Include="..\include\csdm_message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_spawning.h">
+    <ClInclude Include="..\include\csdm_player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_tasks.h">
+    <ClInclude Include="..\include\csdm_spawning.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_timer.h">
+    <ClInclude Include="..\include\csdm_tasks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csdm_util.h">
+    <ClInclude Include="..\include\csdm_timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="moduleconfig.h">
+    <ClInclude Include="..\include\csdm_util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CString.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CVector.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sh_list.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sh_stack.h">
+      <Filter>Module SDK\AMXX STL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdk\amxxmodule.h">
+      <Filter>Module SDK\SDK Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdk\moduleconfig.h">
       <Filter>Module SDK</Filter>
     </ClInclude>
-    <ClInclude Include="chooker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CString.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="CVector.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="sh_list.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="sh_stack.h">
-      <Filter>Module SDK\AMXX STL</Filter>
-    </ClInclude>
-    <ClInclude Include="amxxmodule.h">
-      <Filter>Module SDK\SDK Base</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="version.rc">
+    <ResourceCompile Include="..\version.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

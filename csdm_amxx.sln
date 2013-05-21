@@ -1,6 +1,7 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csdm_amxx", "csdm_amxx.vcxproj", "{3F8C90E5-3741-48EB-B43F-E4761621C784}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csdm_amxx", "msvc12\csdm_amxx.vcxproj", "{3F8C90E5-3741-48EB-B43F-E4761621C784}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

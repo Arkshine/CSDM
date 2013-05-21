@@ -98,39 +98,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="csdm_amxx.cpp" />
-    <ClCompile Include="csdm_config.cpp" />
-    <ClCompile Include="csdm_message.cpp" />
-    <ClCompile Include="csdm_mm.cpp" />
-    <ClCompile Include="csdm_natives.cpp" />
-    <ClCompile Include="csdm_player.cpp" />
-    <ClCompile Include="csdm_spawning.cpp" />
-    <ClCompile Include="csdm_tasks.cpp" />
-    <ClCompile Include="csdm_timer.cpp" />
-    <ClCompile Include="csdm_util.cpp" />
-    <ClCompile Include="amxxmodule.cpp" />
+    <ClCompile Include="..\csdm_amxx.cpp" />
+    <ClCompile Include="..\csdm_config.cpp" />
+    <ClCompile Include="..\csdm_message.cpp" />
+    <ClCompile Include="..\csdm_mm.cpp" />
+    <ClCompile Include="..\csdm_natives.cpp" />
+    <ClCompile Include="..\csdm_player.cpp" />
+    <ClCompile Include="..\csdm_spawning.cpp" />
+    <ClCompile Include="..\csdm_tasks.cpp" />
+    <ClCompile Include="..\csdm_timer.cpp" />
+    <ClCompile Include="..\csdm_util.cpp" />
+    <ClCompile Include="..\sdk\amxxmodule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="chooker.h" />
-    <ClInclude Include="cs_offsets.h" />
-    <ClInclude Include="csdm_amxx.h" />
-    <ClInclude Include="csdm_config.h" />
-    <ClInclude Include="csdm_message.h" />
-    <ClInclude Include="csdm_player.h" />
-    <ClInclude Include="csdm_spawning.h" />
-    <ClInclude Include="csdm_tasks.h" />
-    <ClInclude Include="csdm_timer.h" />
-    <ClInclude Include="csdm_util.h" />
-    <ClInclude Include="amxxmodule.h" />
-    <ClInclude Include="CString.h" />
-    <ClInclude Include="CVector.h" />
-    <ClInclude Include="moduleconfig.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="sh_list.h" />
-    <ClInclude Include="sh_stack.h" />
+    <ClInclude Include="..\include\chooker.h" />
+    <ClInclude Include="..\include\csdm_amxx.h" />
+    <ClInclude Include="..\include\csdm_config.h" />
+    <ClInclude Include="..\include\csdm_message.h" />
+    <ClInclude Include="..\include\csdm_player.h" />
+    <ClInclude Include="..\include\csdm_spawning.h" />
+    <ClInclude Include="..\include\csdm_tasks.h" />
+    <ClInclude Include="..\include\csdm_timer.h" />
+    <ClInclude Include="..\include\csdm_util.h" />
+    <ClInclude Include="..\include\CString.h" />
+    <ClInclude Include="..\include\cs_offsets.h" />
+    <ClInclude Include="..\include\CVector.h" />
+    <ClInclude Include="..\include\resource.h" />
+    <ClInclude Include="..\include\sh_list.h" />
+    <ClInclude Include="..\include\sh_stack.h" />
+    <ClInclude Include="..\sdk\amxxmodule.h" />
+    <ClInclude Include="..\sdk\moduleconfig.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="version.rc" />
+    <ResourceCompile Include="..\version.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
