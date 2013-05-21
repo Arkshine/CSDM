@@ -133,22 +133,17 @@ void InternalSpawnPlayer(edict_t *pEdict)
 {
 	pEdict->v.deadflag = DEAD_RESPAWNABLE;
 	pEdict->v.flags |= FL_FROZEN;
+
 	CBasePlayer *pPlayer = (CBasePlayer *)pEdict->pvPrivateData;
-#if defined WIN32
-	__asm
-	{
-		push ecx;
-		mov ecx, pPlayer;
-		call [g_respawn_func];
-		pop ecx;
-	};
+
+#if defined( WIN32 )
+	typedef void ( __fastcall *RESPAWNFUNC)( CBasePlayer* );
 #else
-	typedef void (*RESPAWNFUNC)(CBasePlayer *);
-	RESPAWNFUNC rfunc = (RESPAWNFUNC)g_respawn_func;
-	rfunc(pPlayer);
+	typedef void ( *RESPAWNFUNC )( CBasePlayer* );
 #endif
 
-	return;
+	RESPAWNFUNC rfunc = ( RESPAWNFUNC )g_respawn_func;
+	rfunc( pPlayer );
 }
 
 FakeCommand::~FakeCommand()
