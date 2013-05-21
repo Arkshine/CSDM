@@ -5,12 +5,7 @@
 #include "csdm_util.h"
 #include "csdm_tasks.h"
 #include "csdm_player.h"
-#include "CSigMngr.h"
 #include "cs_offsets.h"
-
-#define	PAGE_SIZE	4096
-#define ALIGN(ar) ((long)ar & ~(PAGE_SIZE-1))
-
 #include "chooker.h"
 
 CHooker		HookerClass;
@@ -19,21 +14,9 @@ CHooker*	Hooker = &HookerClass;
 CFunc*				RestartRoundHook = NULL;
 FuncRestartRound	RestartRoundOrig = NULL;
 
-#ifdef __linux__
-	#include <sys/mman.h>
-	#define	PAGE_EXECUTE_READWRITE	PROT_READ|PROT_WRITE|PROT_EXEC
-#endif
-
+void *g_restartround_func = NULL;
 void *g_respawn_func = NULL;
-void *g_takedmg_func = NULL;
 float g_last_ff_set = 0.0f;
-
-struct roundpatch_t
-{
-	unsigned char *orig_addr;
-	unsigned char un_patch[CSPLAYER_RESTARTROUND_PATCH_BYTES];
-	unsigned char *new_func;
-} g_round_patch;
 
 struct patch_set
 {
@@ -46,52 +29,6 @@ struct patch_set
 
 patch_set g_takedmg_patches;
 patch_set g_pkilled_patches;
-
-void UTIL_MemProtect(void *addr, int length, int prot)
-{
-#ifdef __linux__
-	void *addr2 = (void *)ALIGN(addr);
-	mprotect(addr2, sysconf(_SC_PAGESIZE), prot);
-#else
-	DWORD old_prot;
-	VirtualProtect(addr, length, prot, &old_prot);
-#endif
-}
-
-unsigned char *UTIL_CodeAlloc(size_t size)
-{
-#if defined WIN32
-	return (unsigned char *)VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
-#else
-	unsigned char *addr = (unsigned char *)memalign(sysconf(_SC_PAGESIZE), size);
-	return addr;
-#endif
-}
-
-void UTIL_CodeFree(unsigned char *addr, size_t size)
-{
-#if defined WIN32
-	VirtualFree(addr, size, MEM_RELEASE);
-#else
-	free(addr);
-#endif
-}
-
-#if defined __linux__
-#define RESOLVE_SIG(var, type, sig) \
-	var = (type)(g_SigMngr.ResolveSig((void *)MDLL_Spawn, sig, 0)); \
-	if (!var) { \
-		LOG_ERROR(PLID, "Sig line %d (%s) failed, contact author!", __LINE__, __FILE__); \
-		return false; \
-	}
-#else
-#define RESOLVE_SIG(var, type, sig) \
-	var = (type)(g_SigMngr.ResolveSig((void *)MDLL_Spawn, sig, sig##_BYTES)); \
-	if (!var) { \
-		LOG_ERROR(PLID, "Sig line %d (%s) failed, contact author!", __LINE__, __FILE__); \
-		return false; \
-	}
-#endif
 
 struct _p_ldr
 {
@@ -115,12 +52,20 @@ void InitPatchControl(_p_ldr src[], patch_set *dest, unsigned int num)
 
 bool InitUtilCode()
 {
-	RESOLVE_SIG(g_respawn_func, void *, CSPLAYER_ROUNDRESPAWN);
-	RESOLVE_SIG(g_round_patch.orig_addr, unsigned char *, CSPLAYER_RESTARTROUND);
-	RESOLVE_SIG(g_takedmg_patches.base, unsigned char *, CSPLAYER_TAKEDAMAGE);
-	RESOLVE_SIG(g_pkilled_patches.base, unsigned char *, CSGAME_PLAYERKILLED);
+	void* gameAddress = Hooker->memFunc->GetLibraryFromAddress( ( void* )MDLL_Spawn );
 
-	RestartRoundHook = Hooker->CreateHook( g_round_patch.orig_addr, ( void* )RestartRound, TRUE );
+	#if defined __linux__
+		BOOL useSymbol = TRUE;
+	#else
+		BOOL useSymbol = FALSE;
+	#endif
+
+	g_respawn_func			= Hooker->MemorySearch< void* >			( CSPLAYER_ROUNDRESPAWN	, gameAddress, useSymbol );
+	g_restartround_func		= Hooker->MemorySearch< void* >			( CSPLAYER_RESTARTROUND	, gameAddress, useSymbol );
+	g_takedmg_patches.base	= Hooker->MemorySearch< unsigned char* >( CSPLAYER_TAKEDAMAGE	, gameAddress, useSymbol );
+	g_pkilled_patches.base	= Hooker->MemorySearch< unsigned char* >( CSGAME_PLAYERKILLED	, gameAddress, useSymbol );
+
+	RestartRoundHook = Hooker->CreateHook( g_restartround_func, ( void* )RestartRound, TRUE );
 	RestartRoundOrig = reinterpret_cast< FuncRestartRound >( RestartRoundHook->GetOriginal() );
 
 	_p_ldr ffa[] = CSP_TD_PATCHES;
@@ -140,7 +85,7 @@ void DoPatch(patch_set *pt)
 	{
 		offs = pt->base + pt->offsets[i];
 		pt_len = strlen((char *)pt->patches[i]);
-		UTIL_MemProtect(offs, pt_len, PAGE_EXECUTE_READWRITE);
+		Hooker->memFunc->ChangeMemoryProtection( offs, pt_len, PAGE_EXECUTE_READWRITE );
 		memcpy(pt->unpatches[i], offs, pt_len);
 		memcpy(offs, pt->patches[i], pt_len);
 	}
@@ -154,7 +99,7 @@ void DoUnPatch(patch_set *pt)
 	{
 		offs = pt->base + pt->offsets[i];
 		pt_len = strlen((char *)pt->patches[i]);
-		UTIL_MemProtect(offs, pt_len, PAGE_EXECUTE_READWRITE);
+		Hooker->memFunc->ChangeMemoryProtection(offs, pt_len, PAGE_EXECUTE_READWRITE);
 		memcpy(offs, pt->unpatches[i], pt_len);
 	}
 }

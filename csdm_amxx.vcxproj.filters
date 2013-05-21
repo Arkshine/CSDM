@@ -54,9 +54,6 @@
     <ClCompile Include="csdm_util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CSigMngr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="amxxmodule.cpp">
       <Filter>Module SDK\SDK Base</Filter>
     </ClCompile>
@@ -87,9 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="csdm_util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CSigMngr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="moduleconfig.h">
