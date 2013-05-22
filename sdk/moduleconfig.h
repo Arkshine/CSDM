@@ -268,9 +268,9 @@
 // #define FN_NameForFunction					NameForFunction
 // #define FN_ClientPrintf						ClientPrintf
 // #define FN_ServerPrint						ServerPrint
-#define FN_Cmd_Args							Cmd_Args
-#define FN_Cmd_Argv							Cmd_Argv
-#define FN_Cmd_Argc							Cmd_Argc
+// #define FN_Cmd_Args							Cmd_Args
+// #define FN_Cmd_Argv							Cmd_Argv
+// #define FN_Cmd_Argc							Cmd_Argc
 // #define FN_GetAttachment						GetAttachment
 // #define FN_CRC32_Init						CRC32_Init
 // #define FN_CRC32_ProcessBuffer				CRC32_ProcessBuffer

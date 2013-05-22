@@ -1,30 +1,7 @@
 #ifndef _INCLUDE_CSDM_UTIL_H
 #define _INCLUDE_CSDM_UTIL_H
 
-#include "CVector.h"
-#include "CString.h"
 #include "chooker.h"
-
-class FakeCommand
-{
-public:
-	FakeCommand() : num_args(0)
-	{
-	};
-	~FakeCommand();
-public:
-	void AddArg(const char *str);
-	int GetArgc() const;
-	const char *GetArg(int i) const;
-	void Reset();
-	void Clear();
-	void SetFullString(const char *fmt, ...);
-	const char *GetFullString() const;
-private:
-	CVector<String *> args;
-	String full;
-	size_t num_args;
-};
 
 //returns true if plugins said ok to remove the weapons 
 bool NotifyForRemove(unsigned int owner, edict_t *ent, edict_t *box);
@@ -39,15 +16,16 @@ void InternalSpawnPlayer(edict_t *pEdict);
 void FFA_Enable();
 void FFA_Disable();
 
-extern FakeCommand g_FakeCmd;
-
-#ifdef __linux__
-	typedef void ( *FuncRestartRound )( void* );
+#if defined( WIN32 )
+	typedef void ( __fastcall *FuncDropPlayerItem )	( CBasePlayer*, DUMMY, const char* );
+	typedef void ( __fastcall *FuncRestartRound )	( void* );
 #else
-	typedef void ( __fastcall *FuncRestartRound )( void* );
-#endif 
+	typedef void ( *FuncDropPlayerItem )	( void*, const char* );
+	typedef void ( *FuncRestartRound )		( void* );
+#endif
 
-extern CFunc*			RestartRoundHook;
-extern FuncRestartRound	RestartRoundOrig;
+extern CFunc*				RestartRoundHook;
+extern FuncRestartRound		RestartRoundOrig;
+extern FuncDropPlayerItem	DropPlayerItem;
 
 #endif //_INCLUDE_CSDM_UTIL_H

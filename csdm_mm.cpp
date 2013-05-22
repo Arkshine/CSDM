@@ -15,7 +15,6 @@
 #define GETCLIENTKEYVALUE				(*g_engfuncs.pfnInfoKeyValue)
 
 Message g_Msg;
-FakeCommand g_FakeCmd;
 int g_DeathMsg = 0;
 int g_ShowMenuMsg = 0;
 int g_CurMsg = 0;
@@ -477,30 +476,6 @@ void PlayerPostThink(edict_t *pEdict)
 	}
 
 	RETURN_META(MRES_IGNORED);
-}
-
-const char *Cmd_Args()
-{
-	if (g_FakeCmd.GetArgc())
-		RETURN_META_VALUE(MRES_SUPERCEDE, g_FakeCmd.GetFullString());
-
-	RETURN_META_VALUE(MRES_IGNORED, NULL);
-}
-
-const char *Cmd_Argv(int argc)
-{
-	if (g_FakeCmd.GetArgc())
-		RETURN_META_VALUE(MRES_SUPERCEDE, g_FakeCmd.GetArg(argc));
-
-	RETURN_META_VALUE(MRES_IGNORED, NULL);
-}
-
-int Cmd_Argc(void)
-{
-	if (g_FakeCmd.GetArgc())
-		RETURN_META_VALUE(MRES_SUPERCEDE, g_FakeCmd.GetArgc());
-
-	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
 
 void ClientCommand(edict_t *pEntity)

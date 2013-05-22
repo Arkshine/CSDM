@@ -15,9 +15,10 @@
 
 #if defined WIN32
 
-	#define CSPLAYER_ROUNDRESPAWN	"0x83,*,*,0x53,0x56,0x8B,*,0x33,*,0x57,0x8A"
-	#define CSPLAYER_RESTARTROUND	"0x51,0x53,0x56,0x8B,*,0x8B,*,*,*,*,*,0x8B"
-	#define CSPLAYER_TAKEDAMAGE		"0x83,*,*,0x53,0x8B,*,*,*,0x55,0x33,*,0x56,0x57"
+	#define CSPLAYER_DROPPLAYERITEM		"0x83,*,*,0x33,*,0x53,0x55,0x56,0x8B,*,*,*,0x57" 
+	#define CSPLAYER_ROUNDRESPAWN		"0x83,*,*,0x53,0x56,0x8B,*,0x33,*,0x57,0x8A"
+	#define CSPLAYER_RESTARTROUND		"0x51,0x53,0x56,0x8B,*,0x8B,*,*,*,*,*,0x8B"
+	#define CSPLAYER_TAKEDAMAGE			"0x83,*,*,0x53,0x8B,*,*,*,0x55,0x33,*,0x56,0x57"
 	/**
 	 * 09C840 (base)
 	 * 09CA04 (0x1C4) - first  check, jnz->1byte jmp, purpose unknown
@@ -40,6 +41,7 @@
 
 #else
 
+	#define CSPLAYER_DROPPLAYERITEM	"_ZN11CBasePlayer14DropPlayerItemEPKc" 
 	#define CSPLAYER_ROUNDRESPAWN	"_ZN11CBasePlayer12RoundRespawnEv"
 	#define CSPLAYER_RESTARTROUND	"_ZN18CHalfLifeMultiplay12RestartRoundEv"
 	#define CSPLAYER_TAKEDAMAGE		"_ZN11CBasePlayer10TakeDamageEP9entvars_sS1_fi"

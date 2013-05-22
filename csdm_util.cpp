@@ -6,13 +6,13 @@
 #include "csdm_tasks.h"
 #include "csdm_player.h"
 #include "cs_offsets.h"
-#include "chooker.h"
 
 CHooker		HookerClass;
 CHooker*	Hooker = &HookerClass;
 
 CFunc*				RestartRoundHook = NULL;
 FuncRestartRound	RestartRoundOrig = NULL;
+FuncDropPlayerItem	DropPlayerItem = NULL;
 
 void *g_restartround_func = NULL;
 void *g_respawn_func = NULL;
@@ -60,10 +60,11 @@ bool InitUtilCode()
 		BOOL useSymbol = FALSE;
 	#endif
 
-	g_respawn_func			= Hooker->MemorySearch< void* >			( CSPLAYER_ROUNDRESPAWN	, gameAddress, useSymbol );
-	g_restartround_func		= Hooker->MemorySearch< void* >			( CSPLAYER_RESTARTROUND	, gameAddress, useSymbol );
-	g_takedmg_patches.base	= Hooker->MemorySearch< unsigned char* >( CSPLAYER_TAKEDAMAGE	, gameAddress, useSymbol );
-	g_pkilled_patches.base	= Hooker->MemorySearch< unsigned char* >( CSGAME_PLAYERKILLED	, gameAddress, useSymbol );
+	DropPlayerItem			= Hooker->MemorySearch< FuncDropPlayerItem >( CSPLAYER_DROPPLAYERITEM, gameAddress, useSymbol );
+	g_respawn_func			= Hooker->MemorySearch< void* >				( CSPLAYER_ROUNDRESPAWN	, gameAddress, useSymbol );
+	g_restartround_func		= Hooker->MemorySearch< void* >				( CSPLAYER_RESTARTROUND	, gameAddress, useSymbol );
+	g_takedmg_patches.base	= Hooker->MemorySearch< unsigned char* >	( CSPLAYER_TAKEDAMAGE	, gameAddress, useSymbol );
+	g_pkilled_patches.base	= Hooker->MemorySearch< unsigned char* >	( CSGAME_PLAYERKILLED	, gameAddress, useSymbol );
 
 	RestartRoundHook = Hooker->CreateHook( g_restartround_func, ( void* )RestartRound, TRUE );
 	RestartRoundOrig = reinterpret_cast< FuncRestartRound >( RestartRoundHook->GetOriginal() );
@@ -144,69 +145,6 @@ void InternalSpawnPlayer(edict_t *pEdict)
 
 	RESPAWNFUNC rfunc = ( RESPAWNFUNC )g_respawn_func;
 	rfunc( pPlayer );
-}
-
-FakeCommand::~FakeCommand()
-{
-	Clear();
-}
-
-void FakeCommand::Reset()
-{
-	num_args = 0;
-}
-
-int FakeCommand::GetArgc() const
-{
-	return num_args;
-}
-
-void FakeCommand::SetFullString(const char *fmt, ...)
-{
-	char buffer[1024];
-	va_list ap;
-	va_start(ap, fmt);
-	_vsnprintf(buffer, sizeof(buffer)-1, fmt, ap);
-	va_end(ap);
-	
-	full.assign(buffer);
-}
-
-const char *FakeCommand::GetFullString() const
-{
-	return full.c_str();
-}
-
-const char *FakeCommand::GetArg(int i) const
-{
-	if (i < 0 || i > GetArgc())
-		return "";
-
-	return args[i]->c_str();
-}
-
-void FakeCommand::Clear()
-{
-	Reset();
-	for (unsigned int i=0; i<args.size(); i++)
-	{
-		delete args[i];
-		args[i] = NULL;
-	}
-
-	args.clear();
-}
-
-void FakeCommand::AddArg(const char *str)
-{
-	num_args++;
-	if (num_args > args.size())
-	{
-		String *pString = new String(str);
-		args.push_back(pString);
-	} else {
-		args[num_args-1]->assign(str);
-	}
 }
 
 void RespawnPlayer(edict_t *pEdict)

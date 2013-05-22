@@ -221,12 +221,13 @@ static cell AMX_NATIVE_CALL csdm_force_drop(AMX *amx, cell *params)
 
 	edict_t *pEdict = MF_GetPlayerEdict(params[1]);
 
-	/** Force the drop! */
-	g_FakeCmd.AddArg("drop");
-	g_FakeCmd.AddArg(str);
-	g_FakeCmd.SetFullString("drop %s", str);
-	MDLL_ClientCommand(pEdict);
-	g_FakeCmd.Reset();
+	CBasePlayer *pPlayer = ( CBasePlayer* )pEdict->pvPrivateData;
+
+#if defined( WIN32 )
+	DropPlayerItem( pPlayer, DUMMY_VAL, str );
+#else
+	DropPlayerItem( pPlayer, str );
+#endif
 
 	if (!params[3])
 	{
